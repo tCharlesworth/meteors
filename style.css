@@ -1,0 +1,19 @@
+body {
+	background-color: black;
+	color: white;
+	overflow: hidden;
+}
+
+#wrapper {
+	margin: auto;
+	width: 600px;
+}
+
+canvas {
+	border: thin solid white;
+}
+
+
+h3, h1 {
+	display: inline-block;
+}
