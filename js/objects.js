@@ -12,8 +12,11 @@ var ShootSound = document.getElementById("phaserSound");
 var BoomSound = document.getElementById("boomSound");
 var EngineSound = document.getElementById("engineSound");
 EngineSound.loop = true;
+var MuteSound = false;
 
 function PlaySound(sound) {
+	if(MuteSound)
+		return;
 	if(!sound.paused) {
 		sound.currentTime = 0;
 	} 

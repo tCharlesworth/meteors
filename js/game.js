@@ -1,6 +1,5 @@
 var GameObjects = [];
 var HighScores = [];
-var AllTimeHighScores = [];
 var StartingAsteroidCount = 3;//Remember to subtract one for level
 var NumLives = 3;
 var Score = 0;
@@ -95,24 +94,13 @@ function DrawHighScores(context) {
 	// context.strokeRect((Screen.width/2-boxWide/2),(Screen.height/2-boxTall/2),boxWide, boxTall);
 	var x = (Screen.width/2-boxWide/2) + 20;//40 is the margin(padding)
 	var y = (Screen.height/2-boxTall/2) + 20;//40 is the margin(padding)
-	if(ShowLocal) {
-		context.fillStyle = 'white';
-		context.fillText("Local High Scores", x, y);
+	context.fillStyle = 'white';
+	context.fillText("Local High Scores", x, y);
+	y += 25;
+	for(var i = 0 ; i < HighScores.length; i++) {
+		var str= (i+1)+") "+HighScores[i].score +" : "+HighScores[i].name;
+		context.fillText(str, x, y);
 		y += 25;
-		for(var i = 0 ; i < HighScores.length; i++) {
-			var str= (i+1)+") "+HighScores[i].score +" : "+HighScores[i].name;
-			context.fillText(str, x, y);
-			y += 25;
-		}
-	} else {
-		context.fillStyle = 'white';
-		context.fillText("All Time High Scores", x, y);
-		y += 25;
-		for(var i = 0 ; i < AllTimeHighScores.length && i < 15; i++) {
-			var str= (i+1)+") "+AllTimeHighScores[i].score +" : "+AllTimeHighScores[i].name;
-			context.fillText(str, x, y);
-			y += 25;
-		}
 	}
 }
 
@@ -218,24 +206,6 @@ function CheckHighScore() {
 		}
 		SaveScores();
 	}
-	if(AllTimeHighScores.length < 100 || AllTimeHighScores[AllTimeHighScores.length].score < Score) {
-		//New All Tim High Score!
-		var name = prompt("You got a All Time High score! Please enter your name");
-		if(!name)
-			name = 'Ghost';
-		AllTimeHighScores.push({name: name, score: Score});
-		PushNewScore({Name: name, Score: Score});
-		AllTimeHighScores.sort(function(a, b) {
-			if(a.score > b.score)
-				return -1;
-			if(a.score < b.score)
-				return 1;
-			return 0;
-		});
-		while(AllTimeHighScores.length > 100) {
-			AllTimeHighScores.pop();
-		}
-	}
 }
 
 function LoadScores() {
@@ -247,46 +217,13 @@ function LoadScores() {
 	} else {
 		console.info("No local data");
 	}
-	///All Time Scores
-	$.ajax({
-		method: 'GET',
-		url: 'https://api.parse.com/1/classes/Score',
-		headers: {'X-Parse-Application-Id': 'XcXNt4VbL1lYb7oqOXjEmJi2nsraygAdFPneSiOl', 'X-Parse-REST-API-Key': 'nfpZ5Ywfu1TEgSFWJL14lmrVoLFFrK1j6spZLBci'},
-		success: function(res) {
-			var data = res.results;
-			data.forEach(function(item) {
-				AllTimeHighScores.push({name: item.Name, score: item.Score});
-			});
-			console.log(AllTimeHighScores);
-		},
-		error: function(err) {
-			console.error(err);
-		}
-	});
 }
 
-function PushNewScore(score) {
-		///All Time Scores
-	$.ajax({
-		method: 'POST',
-		url: 'https://api.parse.com/1/classes/Score',
-		headers: {'X-Parse-Application-Id': 'XcXNt4VbL1lYb7oqOXjEmJi2nsraygAdFPneSiOl', 'X-Parse-REST-API-Key': 'nfpZ5Ywfu1TEgSFWJL14lmrVoLFFrK1j6spZLBci'},
-		data: JSON.stringify(score),
-		success: function(res) {
-			console.log("Server Successfully pushed score");
-		},
-		error: function(err) {
-			console.error(err);
-		}
-	});
-}
 
 function SaveScores() {
 	var data = JSON.stringify(HighScores);
 	localStorage.setItem('AsteroidsHighScores',data);
 	console.info("Scores Saved Locally");
-	
-
 }
 
 //Once we are really ready, Lets do all the INITIALIZATION
@@ -297,4 +234,4 @@ document.addEventListener('DOMContentLoaded', function(event) {
 	setInterval(function() {ShowLocal = !ShowLocal;}, 5000);
 	//Begin game
 	run();
-});
+}); 
