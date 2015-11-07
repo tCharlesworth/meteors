@@ -1,7 +1,10 @@
 # meteors
 
+[Play Meteors](http://tCharlesworth.github.io/meteors)
+
 ##Description
-This is a remake of the old classic arcade game. It was built in HTML5 Canvas using javascript.
+This is a remake of the old classic arcade game. It was built in HTML5 Canvas using javascript to handle the game
+logic and local-storage for saving the high scores. Click on the link above to see the game in action!
 
 ##Controls
 Left and Right Arrow Keys are used for turning the space ship.
